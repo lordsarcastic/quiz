@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -33,7 +34,10 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework.authtoken",
+
+    # custom app
     "authentify.apps.AuthentifyConfig",
+    "quiz.apps.QuizConfig",
 ]
 
 MIDDLEWARE = [
@@ -118,6 +122,8 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+MAX_QUESTION_PER_QUIZ: int = 10
+
 REST_USE_JWT = True
 
 JWT_AUTH_COOKIE = "quiz-auth"
@@ -132,14 +138,18 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
 }
 
-SIMPLE_JWT = {"AUTH_HEADER_TYPES": ("JWT",), "BLACKLIST_AFTER_ROTATION": False}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    "BLACKLIST_AFTER_ROTATION": False,
+    'USER_ID_FIELD': 'uuid',
+}
 
 DJOSER = {
     "LOGIN_FIELD": "email",
     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
     "SEND_ACTIVATION_EMAIL": True,
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': 'activation/{uid}/{token}',
+    'ACTIVATION_URL': 'activation',
 }
 
 CORS_ALLOW_ALL_ORIGINS = True

@@ -11,6 +11,7 @@ app_name='authentify'
 
 urlpatterns = [
     path("register/", UserViewSet.as_view({"post": "create"}), name="register"),
+    path("me/", UserViewSet.as_view({"get": "me"}), name="register"),
     path("login/", TokenObtainPairView.as_view(), name="login"),
     path("refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("verify/", TokenVerifyView.as_view(), name="verify"),
