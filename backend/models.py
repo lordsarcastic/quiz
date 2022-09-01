@@ -4,7 +4,7 @@ from django.template.defaultfilters import slugify
 
 
 class BaseModel(models.Model):
-    uuid = models.UUIDField(default=uuid4, unique=True)
+    uuid = models.UUIDField(default=uuid4, unique=True, primary_key=True)
 
     class Meta:
         abstract = True
