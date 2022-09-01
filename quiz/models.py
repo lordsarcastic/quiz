@@ -1,3 +1,4 @@
+from uuid import UUID
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Q
@@ -23,11 +24,6 @@ class Answer(TimeStampedModel):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     text = models.CharField(max_length=128)
     is_answer = models.BooleanField(default=False)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['question', 'text'], name='unique_answers_for_question'),
-        ]
 
 
 class QuizTaken(TimeStampedModel):

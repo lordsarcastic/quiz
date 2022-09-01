@@ -24,3 +24,25 @@ class IsOwnerOrPublic(permissions.BasePermission):
         
         # Instance must have an attribute named `owner`.
         return obj.owner == request.user
+
+
+class IsOwnerOfQuestion(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        
+        # Instance must have an attribute named `owner`.
+        return obj.question.quiz.owner == request.user
+
+class IsOwnerOfQuiz(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        
+        # Instance must have an attribute named `owner`.
+        return obj.quiz.owner == request.user
+
+
+class IsOwnerOfQuizFromQuestionOrPublic(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if obj.quiz.public:
+            return True
+        
+        # Instance must have an attribute named `owner`.
+        return obj.quiz.owner == request.user
