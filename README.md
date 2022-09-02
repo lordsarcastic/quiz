@@ -14,3 +14,6 @@ A web application for creating and taking quizzes online
 - Create your superuser account with `docker-compose run web python manage.py createsuperuser`. Fill in required details. Note that your password won't display on the screen. Type blindly and trust the god of Django to log it in.
 - To start the server, run `docker-compose up`
 - You can start making requests by visiting [http://localhost:10000](http://localhost:10000)
+
+### Documentation
+Documentation for the application is available in JSON format on [Postman](https://www.getpostman.com/collections/39791e227bb260b4dcfd)
