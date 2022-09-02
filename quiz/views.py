@@ -89,11 +89,6 @@ class PublicRetrieveQuestionAPI(MultipleFieldLookupMixin, generics.RetrieveAPIVi
     permission_classes = [permissions.IsAuthenticated, IsOwnerOfAnswerOrPublic]
     lookup_fields = ["quiz__uuid", "uuid"]
 
-    def get_serializer_class(self):
-        if self.request.method.upper() == "GET":
-            return QuestionSerializer
-        return QuestionOnlySerializer
-
 
 class CreateAnswerAPI(MultipleFieldLookupMixin, generics.CreateAPIView):
     serializer_class = AnswerSerializer
