@@ -17,3 +17,13 @@ A web application for creating and taking quizzes online
 
 ### Documentation
 Documentation for the application is available in JSON format on [Postman](https://www.getpostman.com/collections/39791e227bb260b4dcfd)
+
+## To do
+This section contains uncompleted features for the application
+- Constraints on number of answers per question: Maximum number of answers for a question is meant to be 5
+- Constraints on number of questions per quiz: Maximum number of questions for a quiz is meant to be 10
+- Taking a quiz: Implementing the ability for a user to take a quiz and provide answers with results stored for the user
+- Quiz results: Users should be able to see the results of taking a quiz and individual score weight
+- Quiz taken by user: A user should be able to access the list of quizzes that they have taken and view the results
+- Quiz taken; A user should be able to see their quizzes that has been taken by others and be able to access the results
+- More tests: The test section of the application is not as comprehensive and needs more work
