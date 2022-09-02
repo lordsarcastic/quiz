@@ -7,7 +7,15 @@ from quiz.mixins import MultipleFieldLookupMixin
 from quiz.models import Answer, Question, Quiz
 
 from . import exceptions
-from quiz.serializers import AnswerSerializer, PublicQuestionSerializer, PublicQuizSerializer, QuestionOnlySerializer, QuestionSerializer, QuizOnlySerializer, QuizSerializer
+from quiz.serializers import (
+    AnswerSerializer,
+    PublicQuestionSerializer,
+    PublicQuizSerializer,
+    QuestionOnlySerializer,
+    QuestionSerializer,
+    QuizOnlySerializer,
+    QuizSerializer,
+)
 from .permissions import (
     AdaptedMethodIsOwnerOfQuizFromQuestionOrPublic,
     IsOwner,
@@ -15,7 +23,7 @@ from .permissions import (
     IsOwnerOfQuestion,
     IsOwnerOfQuiz,
     IsOwnerOrReadOnly,
-    IsOwnerOrPublic
+    IsOwnerOrPublic,
 )
 
 
@@ -31,22 +39,19 @@ class ListCreateQuizAPI(generics.ListCreateAPIView):
 class RetrieveUpdateDestroyQuizAPI(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = QuizSerializer
     queryset = Quiz
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwner
-    ]
-    lookup_field = 'uuid'
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    lookup_field = "uuid"
 
     def perform_update(self, serializer):
         serializer.save(owner=self.request.user)
 
+
 class PublicRetrieveQuizAPI(generics.RetrieveAPIView):
     serializer_class = PublicQuizSerializer
     queryset = Quiz
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
-    lookup_field = 'uuid'
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = "uuid"
+
 
 class CreateQuestionAPI(generics.CreateAPIView):
     serializer_class = QuestionSerializer
@@ -54,23 +59,23 @@ class CreateQuestionAPI(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOfQuiz]
 
     def post(self, request: Request, *args, **kwargs):
-        quiz = get_object_or_404(Quiz, pk=kwargs.get('uuid'))
+        quiz = get_object_or_404(Quiz, pk=kwargs.get("uuid"))
         serializer = self.serializer_class(data=request.data, context={"quiz": quiz})
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(
-            data=serializer.data,
-            status=status.HTTP_201_CREATED
-        )
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
-class RetrieveUpdateDestroyQuestionAPI(MultipleFieldLookupMixin, generics.RetrieveUpdateDestroyAPIView):
+
+class RetrieveUpdateDestroyQuestionAPI(
+    MultipleFieldLookupMixin, generics.RetrieveUpdateDestroyAPIView
+):
     serializer_class = QuestionSerializer
     queryset = Question
     permission_classes = [
         permissions.IsAuthenticated,
-        AdaptedMethodIsOwnerOfQuizFromQuestionOrPublic
+        AdaptedMethodIsOwnerOfQuizFromQuestionOrPublic,
     ]
-    lookup_fields = ['quiz__uuid', 'uuid']
+    lookup_fields = ["quiz__uuid", "uuid"]
 
     def get_serializer_class(self):
         if self.request.method.upper() == "GET":
@@ -81,37 +86,34 @@ class RetrieveUpdateDestroyQuestionAPI(MultipleFieldLookupMixin, generics.Retrie
 class PublicRetrieveQuestionAPI(MultipleFieldLookupMixin, generics.RetrieveAPIView):
     serializer_class = PublicQuestionSerializer
     queryset = Question
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwnerOfAnswerOrPublic
-    ]
-    lookup_fields = ['quiz__uuid', 'uuid']
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOfAnswerOrPublic]
+    lookup_fields = ["quiz__uuid", "uuid"]
 
     def get_serializer_class(self):
         if self.request.method.upper() == "GET":
             return QuestionSerializer
         return QuestionOnlySerializer
 
+
 class CreateAnswerAPI(MultipleFieldLookupMixin, generics.CreateAPIView):
     serializer_class = AnswerSerializer
     queryset = Answer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOfQuestion]
-    lookup_fields = ['question__quiz__uuid', 'question__uuid']
+    lookup_fields = ["question__quiz__uuid", "question__uuid"]
 
     def post(self, request, *args, **kwargs):
-        quiz = get_object_or_404(Quiz, pk=kwargs.get('quiz_uuid'))
+        quiz = get_object_or_404(Quiz, pk=kwargs.get("quiz_uuid"))
         question = get_object_or_404(Question, pk=kwargs.get("question_uuid"))
-        serializer = self.serializer_class(data=request.data, context={"question": question})
+        serializer = self.serializer_class(
+            data=request.data, context={"question": question}
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(
-            data=serializer.data,
-            status=status.HTTP_201_CREATED
-        )
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
 
 class RetrieveUpdateDestroyAnswerAPI(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AnswerSerializer
     queryset = Answer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOfQuestion]
-    lookup_fields = ['question__quiz__uuid', 'question__uuid']
-
+    lookup_fields = ["question__quiz__uuid", "question__uuid"]

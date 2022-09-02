@@ -13,6 +13,7 @@ class User(AbstractUser, TimeStampedModel, SlugifiedModel):
     """
     Custom user created with email as the username field
     """
+
     username = CICharField(
         _("username"),
         unique=True,
@@ -26,7 +27,7 @@ class User(AbstractUser, TimeStampedModel, SlugifiedModel):
     )
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
-    SLUG_FIELD = 'username'
+    SLUG_FIELD = "username"
 
     def __str__(self) -> str:
         return f"{self.username} | {self.email}"

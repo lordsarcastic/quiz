@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('quiz', '0001_initial'),
+        ("quiz", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='answer',
-            options={'ordering': ['-created']},
+            name="answer",
+            options={"ordering": ["-created"]},
         ),
         migrations.RemoveConstraint(
-            model_name='answer',
-            name='unique_answers_for_question',
+            model_name="answer",
+            name="unique_answers_for_question",
         ),
     ]

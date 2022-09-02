@@ -32,7 +32,9 @@ class QuizTaken(TimeStampedModel):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['quiz', 'user'], name='unique_quizzes_for_users')
+            models.UniqueConstraint(
+                fields=["quiz", "user"], name="unique_quizzes_for_users"
+            )
         ]
 
 
