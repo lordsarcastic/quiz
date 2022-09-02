@@ -20,10 +20,10 @@ class AnswerSerializer(serializers.ModelSerializer):
         answer.save()
         return answer
 
-class AnswerWithSecretSerializer(serializers.ModelSerializer):
+class PublicAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = "__all__"
+        exclude = ('is_answer',)
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -50,6 +50,13 @@ class QuestionSerializer(serializers.ModelSerializer):
         
         return question
 
+class PublicQuestionSerializer(serializers.ModelSerializer):
+    answers = PublicAnswerSerializer(source="answer_set", many=True)
+    class Meta:
+        model = Question
+        fields = "__all__"
+
+
 
 class QuestionOnlySerializer(serializers.ModelSerializer):
     class Meta:
@@ -70,10 +77,17 @@ class QuizSerializer(serializers.ModelSerializer):
     
     # def create(self, validated_data: Dict[str, Any]):
     #     questions = validated_data.pop("questions")
+class QuizOnlySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = "__all__"
+        read_only_fields = ("uuid", "owner",)
 
 
-
-
-
+class PublicQuizSerializer(serializers.ModelSerializer):
+    questions = PublicQuestionSerializer(source="question_set", many=True, read_only=True)
+    class Meta:
+        model = Quiz
+        fields = "__all__"
 
 # class QuizDetailSerializer

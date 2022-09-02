@@ -16,7 +16,10 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         # Instance must have an attribute named `owner`.
         return obj.owner == request.user
 
-
+class IsOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Instance must have an attribute named `owner`.
+        return obj.owner == request.user
 class IsOwnerOrPublic(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if obj.public:
@@ -25,13 +28,18 @@ class IsOwnerOrPublic(permissions.BasePermission):
         # Instance must have an attribute named `owner`.
         return obj.owner == request.user
 
-
 class IsOwnerOfQuestion(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         
         # Instance must have an attribute named `owner`.
         return obj.question.quiz.owner == request.user
 
+class IsOwnerOfAnswerOrPublic(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if obj.quiz.public:
+            return True
+        
+        return obj.question.quiz.owner == request.user
 class IsOwnerOfQuiz(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         
@@ -39,10 +47,11 @@ class IsOwnerOfQuiz(permissions.BasePermission):
         return obj.quiz.owner == request.user
 
 
-class IsOwnerOfQuizFromQuestionOrPublic(permissions.BasePermission):
+class AdaptedMethodIsOwnerOfQuizFromQuestionOrPublic(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if obj.quiz.public:
-            return True
+        if request.method in permissions.SAFE_METHODS:
+            if obj.quiz.public:
+                return True
         
         # Instance must have an attribute named `owner`.
         return obj.quiz.owner == request.user
