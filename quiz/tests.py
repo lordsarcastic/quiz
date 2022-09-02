@@ -49,8 +49,8 @@ class TestQuizViews(APITestCase):
             {"uuid", "questions", "created", "modified", "title", "public", "owner"},
             set(response.json().keys()),
         )
-        self.assertEqual(response.json()['uuid'], str(quiz.pk))
-    
+        self.assertEqual(response.json()["uuid"], str(quiz.pk))
+
     def test_non_owner_cannot_access_sensitive_question_details_in_quiz(self):
         user = UserModel.objects.get(email="main@email.com")
         access_token = self.client.post(
@@ -59,18 +59,16 @@ class TestQuizViews(APITestCase):
         ).json()["access"]
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
-        quiz = Quiz.objects.filter(owner__email="adeoti.15.jude@gmail.com", question__gte=1).first()
-        url = reverse(
-            "quiz:public-retrieve-quiz",
-            kwargs={
-                "uuid": quiz.uuid
-            })
+        quiz = Quiz.objects.filter(
+            owner__email="adeoti.15.jude@gmail.com", question__gte=1
+        ).first()
+        url = reverse("quiz:public-retrieve-quiz", kwargs={"uuid": quiz.uuid})
         response = self.client.get(url)
         self.assertEqual(
             {"uuid", "questions", "created", "modified", "title", "public", "owner"},
             set(response.json().keys()),
         )
-        self.assertEqual(response.json()['uuid'], str(quiz.pk))
+        self.assertEqual(response.json()["uuid"], str(quiz.pk))
         self.assertNotIn("is_answer", response.json()["questions"][0]["answers"][0])
 
     def test_non_owner_cannot_access_sensitive_question_details(self):
@@ -81,19 +79,18 @@ class TestQuizViews(APITestCase):
         ).json()["access"]
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
-        quiz = Quiz.objects.filter(owner__email="adeoti.15.jude@gmail.com", question__gte=1).first()
+        quiz = Quiz.objects.filter(
+            owner__email="adeoti.15.jude@gmail.com", question__gte=1
+        ).first()
         question = quiz.question_set.all().first()
         url = reverse(
             "quiz:public-retrieve-question",
-            kwargs={
-                "quiz__uuid": quiz.uuid,
-                "uuid": question.uuid
-            })
+            kwargs={"quiz__uuid": quiz.uuid, "uuid": question.uuid},
+        )
         response = self.client.get(url)
         self.assertEqual(
             {"uuid", "answers", "created", "modified", "text", "quiz"},
             set(response.json().keys()),
         )
-        self.assertEqual(response.json()['uuid'], str(question.pk))
+        self.assertEqual(response.json()["uuid"], str(question.pk))
         self.assertNotIn("is_answer", response.json()["answers"][0])
-
