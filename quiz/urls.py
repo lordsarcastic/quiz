@@ -30,9 +30,24 @@ urlpatterns = [
         name="retrieve-update-destroy-quiz",
     ),
     path(
+        "<uuid:uuid>/take",
+        views.TakeQuizAPI.as_view(),
+        name="take-quiz",
+    ),
+    path(
         "<uuid:uuid>/questions/",
         views.CreateQuestionAPI.as_view(),
         name="create-question",
+    ),
+    path(
+        "<uuid:quiz__uuid>/results/",
+        views.GetScoresForQuizAPI.as_view(),
+        name="get-score-for-quiz"
+    ),
+    path(
+        "<uuid:quiz__uuid>/results/<uuid:user__uuid>/",
+        views.GetScoreForUserAPI.as_view(),
+        name="get-score-for-user"
     ),
     path(
         "<uuid:quiz__uuid>/questions/<uuid:uuid>/",

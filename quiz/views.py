@@ -1,13 +1,20 @@
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 
-from rest_framework import generics, permissions, status, mixins
+from rest_framework import generics, permissions, status
 from rest_framework.request import Request
 from rest_framework.response import Response
-from quiz.mixins import MultipleFieldLookupMixin
-from quiz.models import Answer, Question, Quiz
 
-from . import exceptions
-from quiz.serializers import (
+from .mixins import MultipleFieldLookupMixin
+from .models import Answer, Question, Quiz, QuizTaken
+from .permissions import (
+    AdaptedMethodIsOwnerOfQuizFromQuestionOrPublic,
+    IsOwner,
+    IsOwnerOfAnswerOrPublic,
+    IsOwnerOfQuestion,
+    IsOwnerOfQuiz,
+)
+from .serializers import (
     AnswerSerializer,
     PublicQuestionSerializer,
     PublicQuizSerializer,
@@ -15,15 +22,8 @@ from quiz.serializers import (
     QuestionSerializer,
     QuizOnlySerializer,
     QuizSerializer,
-)
-from .permissions import (
-    AdaptedMethodIsOwnerOfQuizFromQuestionOrPublic,
-    IsOwner,
-    IsOwnerOfAnswerOrPublic,
-    IsOwnerOfQuestion,
-    IsOwnerOfQuiz,
-    IsOwnerOrReadOnly,
-    IsOwnerOrPublic,
+    SingleQuizSerializer,
+    TotalScoreSerializer,
 )
 
 
@@ -97,7 +97,7 @@ class CreateAnswerAPI(MultipleFieldLookupMixin, generics.CreateAPIView):
     lookup_fields = ["question__quiz__uuid", "question__uuid"]
 
     def post(self, request, *args, **kwargs):
-        quiz = get_object_or_404(Quiz, pk=kwargs.get("quiz_uuid"))
+        get_object_or_404(Quiz, pk=kwargs.get("quiz_uuid"))
         question = get_object_or_404(Question, pk=kwargs.get("question_uuid"))
         serializer = self.serializer_class(
             data=request.data, context={"question": question}
@@ -112,3 +112,36 @@ class RetrieveUpdateDestroyAnswerAPI(generics.RetrieveUpdateDestroyAPIView):
     queryset = Answer
     permission_classes = [permissions.IsAuthenticated, IsOwnerOfQuestion]
     lookup_fields = ["question__quiz__uuid", "question__uuid"]
+
+
+class TakeQuizAPI(generics.GenericAPIView):
+    serializer_class = SingleQuizSerializer
+    queryset = Quiz
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = "uuid"
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+
+        serializer = self.serializer_class(
+            data={"uuid": kwargs.get("uuid"), "questions": request.data.get("questions")},
+            context={"user": request.user}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+class GetScoreForUserAPI(MultipleFieldLookupMixin, generics.RetrieveAPIView):
+    serializer_class = TotalScoreSerializer
+    queryset = QuizTaken
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_fields = ["user__uuid", "quiz__uuid"]
+
+
+class GetScoresForQuizAPI(MultipleFieldLookupMixin, generics.ListAPIView):
+    serializer_class = TotalScoreSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_fields = ["quiz__uuid"]
+
+    def get_queryset(self):
+        return QuizTaken.objects.filter(quiz__owner=self.request.user)
