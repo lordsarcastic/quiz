@@ -12,9 +12,14 @@ services:
       - ./.env
     depends_on:
       - postgres
+      - redis
   postgres:
     image: postgres:14
     ports:
       - 5432:5432
     env_file:
       - ./.env
+  redis:
+    image: redis:bullseye
+    ports:
+      - 6379:6379

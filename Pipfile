@@ -12,6 +12,7 @@ djoser = "*"
 gunicorn = "*"
 djangorestframework-simplejwt = "*"
 psycopg2-binary = "*"
+redis = "*"
 
 [dev-packages]
 black = "*"

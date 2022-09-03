@@ -151,3 +151,7 @@ DJOSER = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+REDIS_HOST = os.environ.get("REDIS_HOST")
+
+REDIS_PORT = os.environ.get("REDIS_PORT")
