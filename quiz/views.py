@@ -97,8 +97,8 @@ class CreateAnswerAPI(MultipleFieldLookupMixin, generics.CreateAPIView):
     lookup_fields = ["question__quiz__uuid", "question__uuid"]
 
     def post(self, request, *args, **kwargs):
-        get_object_or_404(Quiz, pk=kwargs.get("quiz_uuid"))
-        question = get_object_or_404(Question, pk=kwargs.get("question_uuid"))
+        # get_object_or_404(Quiz, pk=kwargs.get("quiz_uuid"))
+        question = get_object_or_404(Question, pk=kwargs.get("question__uuid"))
         serializer = self.serializer_class(
             data=request.data, context={"question": question}
         )
@@ -140,7 +140,7 @@ class GetScoreForUserAPI(MultipleFieldLookupMixin, generics.RetrieveAPIView):
 
 class GetScoresForQuizAPI(MultipleFieldLookupMixin, generics.ListAPIView):
     serializer_class = TotalScoreSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOfQuiz]
     lookup_fields = ["quiz__uuid"]
 
     def get_queryset(self):

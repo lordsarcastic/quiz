@@ -55,12 +55,12 @@ urlpatterns = [
         name="retrieve-update-destroy-question",
     ),
     path(
-        "<uuid:quiz__uuid>/questions/<uuid:question_uuid>/answers",
+        "<uuid:question__quiz__uuid>/questions/<uuid:question__uuid>/answers",
         views.CreateAnswerAPI.as_view(),
-        name="add-answer",
+        name="create-answer",
     ),
     path(
-        "<uuid:quiz__uuid>/questions/<uuid:question_uuid>/answers/<uuid:pk>",
+        "<uuid:question__quiz__uuid>/questions/<uuid:question__uuid>/answers/<uuid:pk>",
         views.RetrieveUpdateDestroyAnswerAPI.as_view(),
         name="retrieve-update-destroy-answer",
     ),

@@ -62,3 +62,7 @@ class AdaptedMethodIsOwnerOfQuizFromQuestionOrPublic(permissions.BasePermission)
 
         # Instance must have an attribute named `owner`.
         return obj.quiz.owner == request.user
+
+class HasTakenQuiz(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return (obj.user == request.user) or (obj.quiz.owner == request.user)
