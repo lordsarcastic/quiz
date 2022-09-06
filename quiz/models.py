@@ -77,7 +77,7 @@ class QuizTaken(TimeStampedModel):
             count += 1
             user_answer_score = question.get_score()
             total_count += user_answer_score
-        result = total_count / count * 100
+        result = total_count / count
         RedisClient.set(self.get_redis_key(), result)
 
         return result
@@ -110,8 +110,8 @@ class UserAnswer(TimeStampedModel):
         correct_answers = total_answers.filter(is_answer=True)
         correct_answers_count = correct_answers.count()
         weight = 0
-        unit_weight_gain = round(100 / correct_answers_count, 2)
-        unit_weight_loss = round(100 / total_answers.filter(is_answer=False).count(), 2)
+        unit_weight_gain = round(1 / correct_answers_count, 2)
+        unit_weight_loss = round(1 / total_answers.filter(is_answer=False).count(), 2)
 
         for answer in self.answer.all():
             if correct_answers.filter(uuid=answer.uuid).exists():

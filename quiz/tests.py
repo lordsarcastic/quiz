@@ -316,7 +316,7 @@ class TestQuizViews(APITestCase):
         for answer in (answer_4, answer_5):
             user_answer.answer.add(answer)
         user_answer.save()
-        self.assertEqual(75, user_answer.get_score())
+        self.assertEqual(0.75, user_answer.get_score())
 
     def test_quiz_for_user_can_only_be_taken_once(self):
         user = UserModel.objects.get(email="main@email.com")
