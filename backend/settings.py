@@ -144,10 +144,7 @@ SIMPLE_JWT = {
 
 DJOSER = {
     "LOGIN_FIELD": "email",
-    "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
-    "SEND_ACTIVATION_EMAIL": True,
     "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
-    "ACTIVATION_URL": "activation",
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
