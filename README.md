@@ -16,7 +16,7 @@ A web application for creating and taking quizzes online
 - You can start making requests by visiting [http://localhost:10000](http://localhost:10000)
 
 ### Documentation
-Documentation for the application is available in JSON format on [Postman](https://www.getpostman.com/collections/39791e227bb260b4dcfd)
+Documentation for the application is available in [JSON](https://www.getpostman.com/collections/39791e227bb260b4dcfd) and [web-based](https://documenter.getpostman.com/view/23092372/VVBXw5K5) format on Postman.
 
 ### Guide
 A video containing how to use the API is listed on [Youtube](https://www.youtube.com/playlist?list=PLnrSKtGWKVktMKdsmKEUPo1rHpEbLpwJ2)
