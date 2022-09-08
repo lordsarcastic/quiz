@@ -18,6 +18,9 @@ A web application for creating and taking quizzes online
 ### Documentation
 Documentation for the application is available in JSON format on [Postman](https://www.getpostman.com/collections/39791e227bb260b4dcfd)
 
+### Guide
+A video containing how to use the API is listed on [Youtube](https://www.youtube.com/playlist?list=PLnrSKtGWKVktMKdsmKEUPo1rHpEbLpwJ2)
+
 ## To do
 This section contains uncompleted features for the application
 - Constraints on number of questions per quiz: Maximum number of questions for a quiz is meant to be 10
