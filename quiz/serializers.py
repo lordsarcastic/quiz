@@ -79,6 +79,7 @@ class QuizOnlySerializer(serializers.ModelSerializer):
         read_only_fields = (
             "uuid",
             "owner",
+            "is_public"
         )
 
 
@@ -134,7 +135,7 @@ class SingleQuestionSerializer(serializers.Serializer):
                 result = answer_serialized.save()
                 user_answer.answer.add(result)
         except IntegrityError:
-            raise ValidationError("User has already answered this question")
+            raise ValidationError("User has already answered this quiz")
         
         return user_answer
 

@@ -317,6 +317,39 @@ class TestQuizViews(APITestCase):
             user_answer.answer.add(answer)
         user_answer.save()
         self.assertEqual(0.75, user_answer.get_score())
+    
+    def test_get_user_score_for_question_with_single_answer_is_correct(self):
+        quiz = Quiz.objects.filter(owner=self.user).first()
+        question = Question.objects.create(quiz=quiz, text="Random")
+        Answer.objects.create(
+            question=question,
+            text="None"
+        )
+        Answer.objects.create(
+            question=question,
+            text="None"
+        )
+        Answer.objects.create(
+            question=question,
+            text="None"
+        )
+        answer_4 = Answer.objects.create(
+            question=question,
+            text="None"
+        )
+        answer_5 = Answer.objects.create(
+            question=question,
+            text="None",
+            is_answer=True
+        )
+
+        user_answer = UserAnswer.objects.create(
+            user=self.user,
+            question=question,
+        )
+        user_answer.answer.add(answer_5)
+        user_answer.save()
+        self.assertEqual(1, user_answer.get_score())
 
     def test_quiz_for_user_can_only_be_taken_once(self):
         user = UserModel.objects.get(email="main@email.com")

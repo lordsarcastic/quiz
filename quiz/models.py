@@ -113,11 +113,15 @@ class UserAnswer(TimeStampedModel):
         unit_weight_gain = round(1 / correct_answers_count, 2)
         unit_weight_loss = round(1 / total_answers.filter(is_answer=False).count(), 2)
 
-        for answer in self.answer.all():
-            if correct_answers.filter(uuid=answer.uuid).exists():
-                weight += unit_weight_gain
-            else:
-                weight -= unit_weight_loss
+        if correct_answers_count == 1 == self.answer.all().count():
+            weight += self.answer.all().first().is_answer
+
+        else:
+            for answer in self.answer.all():
+                if correct_answers.filter(uuid=answer.uuid).exists():
+                    weight += unit_weight_gain
+                else:
+                    weight -= unit_weight_loss
         
         RedisClient.set(self.get_redis_key(), weight)
         
