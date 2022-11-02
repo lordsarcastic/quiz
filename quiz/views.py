@@ -13,6 +13,7 @@ from .permissions import (
     IsOwnerOfAnswerOrPublic,
     IsOwnerOfQuestion,
     IsOwnerOfQuiz,
+    IsOwnerOfResultsOrOwnerOfQuiz
 )
 from .serializers import (
     AnswerSerializer,
@@ -134,7 +135,7 @@ class TakeQuizAPI(generics.GenericAPIView):
 class GetScoreForUserAPI(MultipleFieldLookupMixin, generics.RetrieveAPIView):
     serializer_class = TotalScoreSerializer
     queryset = QuizTaken
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOfResultsOrOwnerOfQuiz]
     lookup_fields = ["user__uuid", "quiz__uuid"]
 
 

@@ -66,3 +66,10 @@ class AdaptedMethodIsOwnerOfQuizFromQuestionOrPublic(permissions.BasePermission)
 class HasTakenQuiz(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return (obj.user == request.user) or (obj.quiz.owner == request.user)
+
+
+class IsOwnerOfResultsOrOwnerOfQuiz(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        owner_of_results = request.user == obj.user
+        owner_of_quiz = request.user == obj.quiz.owner
+        return owner_of_quiz or owner_of_results
